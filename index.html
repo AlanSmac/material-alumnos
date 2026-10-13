@@ -1,0 +1,417 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Cómo pedirle las cosas a la IA</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap">
+<style>
+/* Layout: banda negra y dorada arriba (la marca), debajo una sola columna de lectura ancha y con letra grande;
+   cada clave enfrenta un "Así no" con un "Así sí" para que la diferencia se vea de un vistazo. */
+:root{
+  --bg:#ffffff; --surface:#f6f3ea; --ink:#17150f; --muted:#5c574a;
+  --gold:#8a6508; --gold-bright:#d4a52a; --line:#e2dccb;
+  --no:#a33a2a; --no-bg:#fbeeea; --yes:#1f6b45; --yes-bg:#eaf5ee;
+  --band:#14120d; --band-ink:#f5efe0; --band-muted:#c9c0a8;
+  --display:"Archivo","Arial Black","Segoe UI",sans-serif;
+  --body:"Atkinson Hyperlegible","Verdana","Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#12110d; --surface:#1d1b15; --ink:#f2ecdd; --muted:#b3ab97;
+    --gold:#e0b440; --gold-bright:#e0b440; --line:#36322a;
+    --no:#f0a091; --no-bg:#2e1a16; --yes:#8fd4ab; --yes-bg:#15271d;
+    --band:#000000; --band-ink:#f5efe0; --band-muted:#c9c0a8;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#12110d; --surface:#1d1b15; --ink:#f2ecdd; --muted:#b3ab97;
+  --gold:#e0b440; --gold-bright:#e0b440; --line:#36322a;
+  --no:#f0a091; --no-bg:#2e1a16; --yes:#8fd4ab; --yes-bg:#15271d;
+  --band:#000000; --band-ink:#f5efe0; --band-muted:#c9c0a8;
+  color-scheme:dark;
+}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:1.1875rem;line-height:1.65}
+p{margin:0}
+a{color:var(--gold)}
+:focus-visible{outline:3px solid var(--gold-bright);outline-offset:3px}
+
+.band{background:var(--band);color:var(--band-ink);padding-inline:20px;padding-block:40px 44px;border-bottom:5px solid var(--gold-bright)}
+.band-in{max-width:46rem;margin-inline:auto;display:flex;flex-wrap:wrap;gap:28px;align-items:center}
+.logo{width:132px;height:132px;border-radius:18px;background:#fff;flex:none}
+.band-text{flex:1 1 18rem;min-width:0;display:flex;flex-direction:column;gap:12px}
+.eyebrow{font-family:var(--display);font-weight:600;font-size:.875rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-bright)}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(2rem,6vw,3rem);line-height:1.08;margin:0;text-wrap:balance}
+.band-text p{color:var(--band-muted);font-size:1.1875rem}
+
+main{max-width:46rem;margin-inline:auto;padding-inline:20px;padding-block:40px 56px;display:flex;flex-direction:column;gap:56px}
+section{display:flex;flex-direction:column;gap:20px;min-width:0}
+h2{font-family:var(--display);font-weight:800;font-size:clamp(1.6rem,4.5vw,2.1rem);line-height:1.15;margin:0;text-wrap:balance}
+h3{font-family:var(--display);font-weight:800;font-size:1.375rem;line-height:1.2;margin:0;text-wrap:balance}
+.lead{font-size:1.3125rem}
+.muted{color:var(--muted)}
+
+.index{display:flex;flex-wrap:wrap;gap:10px;list-style:none;margin:0;padding:0}
+.index a{display:block;padding:10px 16px;border:2px solid var(--line);border-radius:999px;text-decoration:none;color:var(--ink);font-weight:700;font-size:1.0625rem}
+.index a:hover{border-color:var(--gold-bright)}
+
+.word{background:var(--surface);padding:22px 24px;border-radius:14px;display:flex;flex-direction:column;gap:8px}
+.word b{color:var(--gold)}
+
+.rule{border-block:3px solid var(--gold-bright);padding-block:24px;font-size:1.375rem;line-height:1.5;font-weight:700;text-wrap:balance}
+
+.keys{display:flex;flex-direction:column;gap:52px}
+.key{display:flex;flex-direction:column;gap:18px;min-width:0}
+.key-head{display:flex;gap:16px;align-items:baseline}
+.num{font-family:var(--display);font-weight:800;font-size:2.5rem;line-height:1;color:var(--gold);flex:none;font-variant-numeric:tabular-nums}
+.analogy{border-left:4px solid var(--gold-bright);padding-left:18px;font-style:italic}
+
+.pair{display:flex;flex-direction:column;gap:14px}
+.prompt{border-radius:14px;padding:18px 20px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.prompt.no{background:var(--no-bg)}
+.prompt.yes{background:var(--yes-bg)}
+.tag{font-family:var(--display);font-weight:800;font-size:.9375rem;letter-spacing:.08em;text-transform:uppercase}
+.no .tag{color:var(--no)}
+.yes .tag{color:var(--yes)}
+.prompt-top{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:center}
+.text{white-space:pre-line;overflow-wrap:anywhere}
+.copy{font:inherit;font-size:1rem;font-weight:700;padding:8px 16px;border-radius:999px;border:2px solid var(--yes);background:transparent;color:var(--yes);cursor:pointer}
+.copy:hover{background:var(--yes);color:var(--yes-bg)}
+
+.why{display:flex;flex-direction:column;gap:6px}
+.why b{font-family:var(--display);font-size:1.0625rem}
+ul.plain{margin:0;padding-left:1.3em;display:flex;flex-direction:column;gap:6px}
+
+.uses{display:flex;flex-direction:column;gap:40px}
+.use{display:flex;flex-direction:column;gap:14px;min-width:0}
+.tip{background:var(--surface);border-radius:14px;padding:16px 20px;font-size:1.0625rem}
+
+.fixes{display:flex;flex-direction:column;gap:0;border-top:2px solid var(--line)}
+.fix{padding-block:24px;border-bottom:2px solid var(--line);display:flex;flex-direction:column;gap:10px}
+.say{background:var(--surface);border-radius:12px;padding:14px 18px;font-weight:700}
+
+.check{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
+.check label{display:flex;gap:16px;align-items:flex-start;padding:16px 18px;border:2px solid var(--line);border-radius:14px;cursor:pointer}
+.check input{width:28px;height:28px;flex:none;margin:2px 0 0;accent-color:var(--gold-bright)}
+.check label:has(input:checked){border-color:var(--gold-bright);background:var(--surface)}
+.check span{min-width:0}
+.done{font-weight:700;color:var(--yes);min-height:1.65em}
+
+.close{background:var(--band);color:var(--band-ink);border-radius:18px;padding:32px 28px;display:flex;flex-direction:column;gap:14px}
+.close h2{color:var(--gold-bright)}
+.close p{color:var(--band-ink)}
+
+footer{max-width:46rem;margin-inline:auto;padding-inline:20px;padding-block:0 48px;color:var(--muted);font-size:1rem;display:flex;flex-direction:column;gap:8px}
+
+@media (max-width:520px){
+  body{font-size:1.125rem}
+  .logo{width:104px;height:104px}
+  .num{font-size:2rem}
+}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+</style>
+
+<header class="band">
+  <div class="band-in">
+    <img class="logo" src="data:image/jpeg;base64,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" alt="Logo de Sin Miedo al Clic, Comunidad +50 Digital">
+    <div class="band-text">
+      <span class="eyebrow">Sin Miedo al Clic · Guía práctica</span>
+      <h1>Cómo pedirle las cosas a la IA</h1>
+      <p>Seis claves sencillas para que te entienda a la primera, con ejemplos que puedes copiar y adaptar.</p>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<section>
+  <p class="lead">La inteligencia artificial sabe muchísimo, pero no te conoce y no puede leerte la mente. Casi siempre que una respuesta sale floja es porque le faltaba información, no porque tú hayas hecho algo mal.</p>
+  <div class="word">
+    <p><b>Una palabra que vas a oír mucho: «prompt».</b></p>
+    <p>Es, sencillamente, el mensaje que le escribes a la IA. Nada más. Cuando alguien dice «hacer un buen prompt» quiere decir «explicarse bien».</p>
+  </div>
+  <p>Esta guía sirve igual para Claude, ChatGPT, Gemini o cualquier otro asistente con el que hables por escrito.</p>
+  <ul class="index">
+    <li><a href="#idea">La idea de fondo</a></li>
+    <li><a href="#claves">Las 6 claves</a></li>
+    <li><a href="#usos">Según lo que necesites</a></li>
+    <li><a href="#arreglos">Si algo no sale bien</a></li>
+    <li><a href="#repaso">Repaso antes de enviar</a></li>
+  </ul>
+</section>
+
+<section id="idea">
+  <h2>La idea de fondo: un ayudante en su primer día</h2>
+  <p>Imagina que entra a trabajar contigo una persona muy preparada. Sabe de todo, pero es su primer día: no conoce tu casa, tu negocio ni tus gustos.</p>
+  <p>Si le dices <i>«prepara algo rico para comer»</i>, hará lo que se le ocurra. Si le dices <i>«prepara una comida ligera para dos, con el pollo que hay en la nevera, sin picante, y que esté lista en veinte minutos»</i>, acertará.</p>
+  <p>Con la IA pasa exactamente lo mismo.</p>
+  <p class="rule">Cuanto mejor le expliques qué quieres, para qué y cómo lo quieres, mejor será lo que te devuelva.</p>
+</section>
+
+<section id="claves">
+  <h2>Las 6 claves</h2>
+  <p class="muted">No hace falta usarlas todas a la vez. Empieza por la primera y ve sumando las demás cuando te sientas a gusto.</p>
+
+  <div class="keys">
+
+    <article class="key">
+      <div class="key-head"><span class="num">1</span><h3>Di con claridad qué quieres</h3></div>
+      <p class="analogy">Es como ir a la modista y pedirle «ropa». Sin saber qué prenda, qué tela, tu talla y para qué ocasión, es difícil que acierte.</p>
+      <div class="pair">
+        <div class="prompt no"><span class="tag">Así no</span><p class="text">Ayúdame con un viaje.</p></div>
+        <div class="prompt yes">
+          <div class="prompt-top"><span class="tag">Así sí</span><button class="copy" type="button">Copiar</button></div>
+          <p class="text">Quiero organizar un fin de semana en Lisboa para dos personas en mayo. Nos gusta caminar sin prisa, comer bien y no madrugar. Prepárame un plan por días, con dos o tres cosas para cada día y una alternativa por si llueve.</p>
+        </div>
+      </div>
+      <div class="why"><b>Por qué funciona mejor</b>
+        <ul class="plain">
+          <li>Dice para cuántas personas, dónde y cuándo.</li>
+          <li>Cuenta cómo os gusta viajar.</li>
+          <li>Pide el resultado de una forma concreta: un plan por días.</li>
+        </ul>
+      </div>
+    </article>
+
+    <article class="key">
+      <div class="key-head"><span class="num">2</span><h3>Enséñale un ejemplo</h3></div>
+      <p class="analogy">En la peluquería, llevar una foto del corte que quieres funciona mucho mejor que intentar describirlo con palabras.</p>
+      <div class="pair">
+        <div class="prompt no"><span class="tag">Así no</span><p class="text">Escribe un mensaje para mis clientes.</p></div>
+        <div class="prompt yes">
+          <div class="prompt-top"><span class="tag">Así sí</span><button class="copy" type="button">Copiar</button></div>
+          <p class="text">Tengo que avisar a mis clientes de que cierro por vacaciones la segunda quincena de agosto. Este es un mensaje que les mandé otra vez y que me gustó cómo quedó:
+
+«Hola, familia. Os escribo para contaros que el lunes abrimos una hora más tarde por una reforma pequeña. Perdonad las molestias y gracias por vuestra paciencia. Un abrazo, Carmen.»
+
+Escríbeme el aviso nuevo con ese mismo tono y más o menos la misma extensión.</p>
+        </div>
+      </div>
+      <div class="why"><b>Por qué funciona mejor</b>
+        <p>Con una muestra delante, la IA ya no tiene que adivinar si hablas de tú o de usted, si eres breve o te extiendes, ni cómo te despides. Lo ve.</p>
+      </div>
+    </article>
+
+    <article class="key">
+      <div class="key-head"><span class="num">3</span><h3>Pídele que piense paso a paso</h3></div>
+      <p class="analogy">Como el profesor de matemáticas que no se conformaba con el resultado y pedía ver toda la operación. Al obligarse a escribir los pasos, uno se equivoca menos.</p>
+      <div class="pair">
+        <div class="prompt no"><span class="tag">Así no</span><p class="text">¿Me compro una tableta o un portátil?</p></div>
+        <div class="prompt yes">
+          <div class="prompt-top"><span class="tag">Así sí</span><button class="copy" type="button">Copiar</button></div>
+          <p class="text">Dudo entre comprarme una tableta o un portátil. Lo usaré para videollamadas con la familia, leer y escribir algún documento de vez en cuando. Piénsalo paso a paso:
+
+1. Qué necesito de verdad para ese uso.
+2. Ventajas e inconvenientes de cada opción.
+3. Qué me preguntarías antes de decidir.
+
+Explícame tu razonamiento en cada paso y termina con un resumen corto.</p>
+        </div>
+      </div>
+      <div class="why"><b>Por qué funciona mejor</b>
+        <p>Le marcas el camino y le pides que te enseñe cómo llega a la conclusión. Así puedes ver en qué se apoya y decirle si algo no encaja con tu caso.</p>
+      </div>
+    </article>
+
+    <article class="key">
+      <div class="key-head"><span class="num">4</span><h3>Afina la respuesta, no empieces de cero</h3></div>
+      <p class="analogy">Es como probar el guiso y corregirlo de sal. No tiras la olla: ajustas lo que falta.</p>
+      <div class="pair">
+        <div class="prompt no"><span class="tag">Así no</span><p class="text">Hazlo mejor.</p></div>
+        <div class="prompt yes">
+          <div class="prompt-top"><span class="tag">Así sí</span><button class="copy" type="button">Copiar</button></div>
+          <p class="text">Va bien encaminado. Cámbiame tres cosas:
+
+1. Pon un tono más cercano, hablando de tú.
+2. Añade un ejemplo concreto.
+3. Acorta el segundo párrafo, que se hace largo.</p>
+        </div>
+      </div>
+      <div class="why"><b>Por qué funciona mejor</b>
+        <p>«Mejor» significa algo distinto para cada persona. Si le dices exactamente qué cambiar, lo cambia. Hablar con la IA es una conversación: lo normal es dar dos o tres vueltas hasta que queda a tu gusto.</p>
+      </div>
+    </article>
+
+    <article class="key">
+      <div class="key-head"><span class="num">5</span><h3>Cuéntale tu situación</h3></div>
+      <p class="analogy">Si le pides consejo a alguien que no sabe nada de ti, te dará el consejo que le daría a cualquiera. Si conoce tu caso, te dará el tuyo.</p>
+      <div class="pair">
+        <div class="prompt no"><span class="tag">Así no</span><p class="text">¿Cómo hago publicidad?</p></div>
+        <div class="prompt yes">
+          <div class="prompt-top"><span class="tag">Así sí</span><button class="copy" type="button">Copiar</button></div>
+          <p class="text">Tengo una tienda pequeña de lanas en mi barrio y quiero darla a conocer por internet. Dispongo de poco tiempo y nunca he usado las redes sociales para el negocio. Dime:
+
+1. Por dónde me conviene empezar.
+2. Qué tipo de mensajes suelen gustar a la gente del barrio.
+3. Qué errores comunes debería evitar.</p>
+        </div>
+      </div>
+      <div class="why"><b>Por qué funciona mejor</b>
+        <p>La IA sabe de muchos temas, pero necesita saber cuál es tu caso para elegir qué contarte. Sin ese contexto te suelta la teoría general.</p>
+      </div>
+    </article>
+
+    <article class="key">
+      <div class="key-head"><span class="num">6</span><h3>Dale un papel</h3></div>
+      <p class="analogy">Como ensayar una conversación difícil con un amigo que hace de la otra persona. Ves venir lo que te van a decir.</p>
+      <div class="pair">
+        <div class="prompt no"><span class="tag">Así no</span><p class="text">Ayúdame a negociar.</p></div>
+        <div class="prompt yes">
+          <div class="prompt-top"><span class="tag">Así sí</span><button class="copy" type="button">Copiar</button></div>
+          <p class="text">Ponte en el papel del proveedor al que le compro las telas para mi taller. Quiero pedirle una rebaja en el precio. Como proveedor, dime:
+
+1. Tres pegas que me pondrías.
+2. Cómo podría responder yo a cada una.
+3. Dos cosas que podrías ofrecerme en lugar de bajar el precio.
+
+Después cambia de papel y aconséjame a mí, como compradora, cómo plantear la conversación.</p>
+        </div>
+      </div>
+      <div class="why"><b>Por qué funciona mejor</b>
+        <p>Al ponerse en la piel de la otra persona, la IA piensa como ella y te adelanta sus argumentos. Luego, al cambiar de papel, te ayuda a prepararte.</p>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<section id="usos">
+  <h2>Según lo que necesites</h2>
+  <p class="muted">Las mismas claves, aplicadas a cuatro cosas que se piden muy a menudo.</p>
+
+  <div class="uses">
+
+    <article class="use">
+      <h3>Escribir un texto</h3>
+      <p>Dile para quién es, con qué tono y cuánto debe ocupar.</p>
+      <div class="prompt yes">
+        <div class="prompt-top"><span class="tag">Ejemplo</span><button class="copy" type="button">Copiar</button></div>
+        <p class="text">Escríbeme un texto para el tablón de la asociación de vecinos anunciando un taller gratuito para aprender a usar el móvil. Lo va a leer gente mayor que no se lleva bien con la tecnología, así que:
+
+1. Usa palabras sencillas, sin términos técnicos.
+2. Que suene cercano y tranquilo, sin prisas.
+3. Termina diciendo cómo apuntarse.
+
+Que no pase de 120 palabras.</p>
+      </div>
+    </article>
+
+    <article class="use">
+      <h3>Resumir un documento largo</h3>
+      <p>Dile qué documento es, qué parte te interesa y pídele que te indique dónde está cada cosa.</p>
+      <div class="prompt yes">
+        <div class="prompt-top"><span class="tag">Ejemplo</span><button class="copy" type="button">Copiar</button></div>
+        <p class="text">Te adjunto las condiciones de mi seguro de hogar. Resúmemelas en dos párrafos sencillos y después contéstame:
+
+1. ¿Qué daños cubre y cuáles no?
+2. ¿Qué tengo que hacer si tengo una avería?
+3. ¿Hay plazos que deba conocer?
+
+En cada respuesta dime en qué página o apartado lo has encontrado.</p>
+      </div>
+      <p class="tip">Pedirle la página te permite ir al documento y comprobarlo tú. En temas de dinero, salud o contratos, compruébalo siempre.</p>
+    </article>
+
+    <article class="use">
+      <h3>Entender unas cuentas o una tabla</h3>
+      <p>Antes de que empiece, dile cómo quieres que te lo presente.</p>
+      <div class="prompt yes">
+        <div class="prompt-top"><span class="tag">Ejemplo</span><button class="copy" type="button">Copiar</button></div>
+        <p class="text">Te adjunto la hoja con los gastos de casa de este año. Preséntamelo así:
+
+1. Un resumen en dos o tres frases.
+2. Los tres gastos más grandes.
+3. Tres cosas que te llamen la atención, cada una con una explicación corta.
+4. Dos ideas para organizarlo mejor.</p>
+      </div>
+      <p class="tip">La IA puede equivocarse al sumar o al leer una cifra. Repasa los números importantes antes de fiarte.</p>
+    </article>
+
+    <article class="use">
+      <h3>Buscar ideas y comparar opciones</h3>
+      <p>Pon condiciones y pide una tabla. Comparar en tabla es mucho más cómodo.</p>
+      <div class="prompt yes">
+        <div class="prompt-top"><span class="tag">Ejemplo</span><button class="copy" type="button">Copiar</button></div>
+        <p class="text">Quiero organizar algo especial por los 70 años de mi hermana. Seremos unas quince personas de la familia, de todas las edades.
+
+1. Dame diez ideas.
+2. Explica en una frase por qué cada una puede gustarle.
+3. Señala cuáles son sencillas de organizar y cuáles dan más trabajo.
+
+Después compárame las tres que te parezcan mejores en una tabla con: preparación necesaria, para quién es más cómoda y qué puede salir mal.</p>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<section id="arreglos">
+  <h2>Si algo no sale bien</h2>
+  <p>Le pasa a todo el mundo, también a quien lleva años con esto. Estos son los tres tropiezos más habituales y cómo se arreglan.</p>
+
+  <div class="fixes">
+    <div class="fix">
+      <h3>Se inventa cosas</h3>
+      <p>A veces la IA rellena los huecos con datos que suenan bien pero no son ciertos. Ayuda mucho darle permiso para decir que no lo sabe.</p>
+      <p class="say">«Si no estás seguro de algo, dímelo. Prefiero un "no lo sé" a un dato inventado.»</p>
+    </div>
+    <div class="fix">
+      <h3>Se salta pasos o la respuesta queda a medias</h3>
+      <p>Seguramente le has pedido demasiado de una vez. Parte el encargo en trozos y ve mensaje a mensaje: primero una cosa, cuando esté bien, la siguiente.</p>
+    </div>
+    <div class="fix">
+      <h3>No se acuerda de lo que hablasteis otro día</h3>
+      <p>Cada conversación nueva suele empezar de cero. Algunas aplicaciones ya guardan cosas de charlas anteriores, pero no cuentes con ello: al empezar, vuelve a contarle lo que necesita saber.</p>
+    </div>
+  </div>
+</section>
+
+<section id="repaso">
+  <h2>Repaso antes de enviar</h2>
+  <p>Cinco preguntas rápidas. Puedes ir marcándolas.</p>
+  <ul class="check">
+    <li><label for="c1"><input type="checkbox" id="c1"><span><b>¿He dicho qué quiero exactamente?</b> Y, si ayuda, qué papel debe hacer la IA.</span></label></li>
+    <li><label for="c2"><input type="checkbox" id="c2"><span><b>¿Le he contado mi situación?</b> Y para quién es el resultado.</span></label></li>
+    <li><label for="c3"><input type="checkbox" id="c3"><span><b>¿Le he dado un ejemplo o le he dicho cómo lo quiero?</b> Una lista, una tabla, tantas palabras.</span></label></li>
+    <li><label for="c4"><input type="checkbox" id="c4"><span><b>Si es algo complicado, ¿le he pedido que piense paso a paso?</b></span></label></li>
+    <li><label for="c5"><input type="checkbox" id="c5"><span><b>¿Le he dado permiso para decir «no lo sé»?</b></span></label></li>
+  </ul>
+  <p class="done" id="done" aria-live="polite"></p>
+</section>
+
+<section class="close">
+  <h2>Y si no sale a la primera</h2>
+  <p>No pasa nada. Equivocarse forma parte de aprender, y aquí además no se rompe nada: reescribes el mensaje y pruebas otra vez.</p>
+  <p>Elige hoy una sola de las seis claves y úsala en lo próximo que le pidas a la IA.</p>
+</section>
+
+</main>
+
+<footer>
+  <p>Adaptado de la guía de prompting de Claude, de Anthropic. Los ejemplos y comparaciones son propios de Sin Miedo al Clic.</p>
+  <p>Sin Miedo al Clic · La tecnología debe adaptarse a las personas, no las personas a la tecnología.</p>
+</footer>
+
+<script>
+document.querySelectorAll('.copy').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    var p = btn.closest('.prompt').querySelector('.text');
+    var txt = p.textContent.trim();
+    function ok(){ btn.textContent = 'Copiado'; setTimeout(function(){ btn.textContent = 'Copiar'; }, 2000); }
+    function fallback(){
+      var r = document.createRange(); r.selectNodeContents(p);
+      var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+      btn.textContent = 'Texto seleccionado'; setTimeout(function(){ btn.textContent = 'Copiar'; }, 2500);
+    }
+    try { navigator.clipboard.writeText(txt).then(ok, fallback); } catch(e){ fallback(); }
+  });
+});
+var boxes = document.querySelectorAll('.check input'), done = document.getElementById('done');
+function upd(){
+  var n = 0; boxes.forEach(function(b){ if(b.checked) n++; });
+  done.textContent = n === boxes.length ? 'Todo listo. Ya puedes enviar tu mensaje.' : '';
+}
+boxes.forEach(function(b){ b.addEventListener('change', upd); });
+upd();
+</script>
+
+</body></html>
