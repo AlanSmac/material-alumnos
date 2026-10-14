@@ -1,4 +1,3 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <title>Cómo pedirle las cosas a la IA</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap">
 <style>
@@ -100,6 +99,14 @@ ul.plain{margin:0;padding-left:1.3em;display:flex;flex-direction:column;gap:6px}
 .close h2{color:var(--gold-bright)}
 .close p{color:var(--band-ink)}
 
+.band-link{align-self:flex-start;display:inline-flex;gap:10px;align-items:center;margin-top:4px;padding:12px 22px;border:2px solid var(--gold-bright);border-radius:999px;color:var(--gold-bright);font-weight:700;font-size:1.125rem;text-decoration:none}
+.band-link:hover{background:var(--gold-bright);color:#14120d}
+.join{border:3px solid var(--gold-bright);border-radius:18px;padding:32px 28px;display:flex;flex-direction:column;gap:16px;align-items:flex-start}
+.join .eyebrow{color:var(--gold)}
+.btn{display:inline-block;background:var(--gold-bright);color:#14120d;font-family:var(--display);font-weight:800;font-size:1.1875rem;text-decoration:none;padding:16px 28px;border-radius:999px}
+.btn:hover{background:var(--ink);color:var(--bg)}
+.join small{color:var(--muted);font-size:1rem}
+
 footer{max-width:46rem;margin-inline:auto;padding-inline:20px;padding-block:0 48px;color:var(--muted);font-size:1rem;display:flex;flex-direction:column;gap:8px}
 
 @media (max-width:520px){
@@ -117,6 +124,7 @@ footer{max-width:46rem;margin-inline:auto;padding-inline:20px;padding-block:0 48
       <span class="eyebrow">Sin Miedo al Clic · Guía práctica</span>
       <h1>Cómo pedirle las cosas a la IA</h1>
       <p>Seis claves sencillas para que te entienda a la primera, con ejemplos que puedes copiar y adaptar.</p>
+      <a class="band-link" href="#comunidad"><span aria-hidden="true">🎁</span> Un regalo de la comunidad Sin Miedo al Clic <span aria-hidden="true">↓</span></a>
     </div>
   </div>
 </header>
@@ -384,6 +392,15 @@ Después compárame las tres que te parezcan mejores en una tabla con: preparaci
   <p>Elige hoy una sola de las seis claves y úsala en lo próximo que le pidas a la IA.</p>
 </section>
 
+<section class="join" id="comunidad">
+  <span class="eyebrow">¿Te ha servido esta guía?</span>
+  <h2>Sigue aprendiendo con nosotros</h2>
+  <p>Sin Miedo al Clic es una comunidad para personas de más de 50 que quieren aprender a usar la inteligencia artificial sin agobios, sin tecnicismos y a su ritmo. Dentro hay cursos gratuitos para dar los primeros pasos y un sitio donde preguntar es lo normal.</p>
+  <p>Ya no estás solo. Tienes a tu lado a alguien que ya ha recorrido ese camino.</p>
+  <a class="btn" href="https://www.skool.com/sin-miedo-al-clic-8949/about">Conocer la comunidad</a>
+  <small>Es gratis. Entras, echas un vistazo y decides tú.</small>
+</section>
+
 </main>
 
 <footer>
@@ -413,5 +430,3 @@ function upd(){
 boxes.forEach(function(b){ b.addEventListener('change', upd); });
 upd();
 </script>
-
-</body></html>
